@@ -18,8 +18,6 @@ jobs:
       matrix:
         language:
           - java-kotlin
-          - javascript-typescript
-          - php
 
     steps:
       - name: Checkout
