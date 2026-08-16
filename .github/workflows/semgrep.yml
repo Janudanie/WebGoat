@@ -36,7 +36,7 @@ jobs:
       - name: Semgrep Code Scan
         run: |
           semgrep scan \
-            --config p/java \
+            --config auto \
             --json \
             --output semgrep-results.json || true
 
