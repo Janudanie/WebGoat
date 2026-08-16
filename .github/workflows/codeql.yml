@@ -37,6 +37,16 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          output: codeql-results
+
+      - name: Upload CodeQL results
+        uses: actions/upload-artifact@v4
+        if: ${{ matrix.run_number == 1 }}
+        with:
+          name: codeql-results
+          path: codeql-results
+          if-no-files-found: error
 
       - name: Show completion time
         run: |
