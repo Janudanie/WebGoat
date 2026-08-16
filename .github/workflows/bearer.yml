@@ -1,0 +1,49 @@
+name: Bearer Benchmark
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Benchmark Run ${{ matrix.run_number }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        run_number: [1,2,3,4,5,6,7,8,9,10]
+
+    steps:
+      - name: Show benchmark run
+        run: |
+          echo "Benchmark Run ${{ matrix.run_number }}"
+          echo "Started: $(date)"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Bearer
+        run: |
+          curl -sfL https://raw.githubusercontent.com/Bearer/bearer/main/contrib/install.sh \
+            | sh -s -- -b "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Bearer Code Scan
+        run: |
+          bearer scan . \
+            --format json \
+            --output bearer-results.json || true
+
+      - name: Upload Bearer results
+        uses: actions/upload-artifact@v4
+        with:
+          name: bearer-results-${{ matrix.run_number }}
+          path: bearer-results.json
+          if-no-files-found: error
+
+      - name: Show completion time
+        run: |
+          echo "Finished: $(date)"
