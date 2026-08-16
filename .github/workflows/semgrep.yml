@@ -40,6 +40,13 @@ jobs:
             --json \
             --output semgrep-results.json || true
 
+      - name: Upload Semgrep results
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results-${{ matrix.run_number }}
+          path: semgrep-results.json
+          if-no-files-found: error
+
       - name: Show completion time
         run: |
           echo "Finished: $(date)"
